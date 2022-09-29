@@ -1,0 +1,18 @@
+name: Check Criteria
+
+on:
+  pull_request:
+    types: [ labeled ]
+
+jobs:
+  test:
+    if: ${{ github.event.label.name == 'submitted' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if name is username same as new branch
+        uses: actions/github-script@v3
+        with:
+          script: |
+              if(context.payload.pull_request.head.ref != context.payload.pull_request.user.login) {
+                core.setFailed('username and pull request branch is not equal!');
+              }
